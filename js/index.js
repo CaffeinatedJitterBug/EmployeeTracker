@@ -11,7 +11,11 @@ inquirer
     ])
     .then((response) => {
         if (response === 'View all departments') {
-
+            
+        } else if (response === 'View all roles') {
+            
+        } else if (response === 'View all employees') {
+            
         } else if (response === 'Add a department') {
 
         } else if (response === 'Add a role') {
