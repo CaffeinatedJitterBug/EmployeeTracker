@@ -1,20 +1,14 @@
-const express = require('express');
+const inquirer = require('inquirer');
 const mysql = require('mysql2');
-
-const PORT = process.env.PORT || 3001;
-const app = express();
-
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
 
 const db = mysql.createConnection(
     {
-      host: 'localhost',
-      // MySQL username,
-      user: 'root',
-      // MySQL password
-      password: '',
-      database: 'employees_db'
+        host: 'localhost',
+        // MySQL username,
+        user: 'root',
+        // MySQL password
+        password: '',
+        database: 'employees_db'
     },
     console.log(`Connected to the employees_db database.`)
 );
@@ -46,8 +40,94 @@ function viewAllEmp() {
     });
 }
 
-function addDept(name) {
-    db.query(`INSERT INTO department()`, (err, results) => {
+function addDept() {
+    inquirer
+        .prompt([
+            {
+                type: 'input',
+                message: 'What is the name of the department you would like to add?',
+                name: 'add_department'
+            }
+        ])
+        .then((response) => {
+            db.query(`INSERT INTO department (name) VALUES (?)`, response.add_department, (err) => {
+                if (err) {
+                    console.log(err);
+                }
+            });
+        })
+
+}
+
+function addRole() {
+    inquirer
+        .prompt([
+            {
+                type: 'input',
+                message: 'What is the title of role would you like to add?',
+                name: 'title'
+            },
+            {
+                type: 'input',
+                message: 'What is salary for this role?',
+                name: 'salary'
+            },
+            {
+                type: 'input',
+                message: 'What is the department ID for this role?',
+                name: 'dept_id'
+            },
+        ])
+        .then((response) => {
+            db.query(`INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)`, [response.title, response.salary, response.dept_id], (err, results) => {
+                if (err) {
+                    console.log(err);
+                }
+                console.table(results);
+            });
+        })
+}
+
+function addEmp() {
+    db.query('SELECT id AS value, title AS name FROM roles', (err, choices) => {
+        db.query
+        inquirer
+            .prompt([
+                {
+                    type: 'input',
+                    message: 'What is the first name of the employee you would like to add?',
+                    name: 'firstname'
+                },
+                {
+                    type: 'input',
+                    message: 'What is their last name?',
+                    name: 'lastname'
+                },
+                {
+                    type: 'list',
+                    message: 'What is their role?',
+                    name: 'role',
+                    choices
+                },
+                {
+                    type: 'input',
+                    message: 'What is their department ID?',
+                    name: 'department'
+                }
+            ])
+            .then((response) => {
+                db.query(`INSERT INTO employee (first_name, last_name, role_id, department_id) VALUES (?, ?, ?, ?)`, response, (err, results) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    console.table(results);
+                })
+            })
+    });
+}
+
+function updateEmp(id, firstname, lastname, role, manager) {
+    db.query(`UPDATE employee SET id = ? first_name = ? last_name = ? role_id = ? manager_id = ? WHERE id= ?`, id, firstname, lastname, role, manager, (err, results) => {
         if (err) {
             console.log(err);
         }
@@ -55,37 +135,4 @@ function addDept(name) {
     });
 }
 
-function addRole(role) {
-    db.query(`INSERT INTO roles()`, (err, results) => {
-        if (err) {
-            console.log(err);
-        }
-        console.log(result);
-    });
-}
-
-function addEmp(dept) {
-    db.query(`INSERT INTO employees()`, (err, results) => {
-        if (err) {
-            console.log(err);
-        }
-        console.log(result);
-    });
-}
-
-function updateEmp() {
-    db.query(`UPDATE employee SET first_name = ? last_name = ? role_id = ? manager_id = ? WHERE id= ?`, (err, results) => {
-        if (err) {
-            console.log(err);
-        }
-        console.log(result);
-    });
-}
-
-app.use((req, res) => {
-    res.status(404).end();
-});
-
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+module.exports = { addDept, addRole, addEmp };

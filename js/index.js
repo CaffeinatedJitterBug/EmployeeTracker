@@ -1,4 +1,5 @@
 const inquirer = require('inquirer');
+const { addDept, addRole, addEmp } = require('./dbcommands');
 
 inquirer
     .prompt([
@@ -9,26 +10,23 @@ inquirer
             choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role']
         }
     ])
-    .then((response) => {
-        if (response === 'View all departments') {
+    .then(({ init }) => {
+        if (init === 'View all departments') {
             viewAllDept();
-            console.log('Working!');
-        } else if (response === 'View all roles') {
+        } else if (init === 'View all roles') {
             viewAllRoles();
-            console.log('Working!');
-        } else if (response === 'View all employees') {
+        } else if (init === 'View all employees') {
             viewAllEmp();
-            console.log('Working!');
-        } else if (response === 'Add a department') {
+        } else if (init === 'Add a department') {
             addDept();
             console.log('Working!');
-        } else if (response === 'Add a role') {
+        } else if (init === 'Add a role') {
             addRole();
             console.log('Working!');
-        } else if (response === 'Add an employee') {
+        } else if (init === 'Add an employee') {
             addEmp();
             console.log('Working!');
-        } else if (response === 'Update an employee role') {
+        } else if (init === 'Update an employee role') {
             updateEmp();
             console.log('Working!');
         }
