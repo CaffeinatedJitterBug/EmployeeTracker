@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-const { addDept, addRole, addEmp } = require('./dbcommands');
+const { addDept, addRole, addEmp, viewAllDept, viewAllRoles, viewAllEmp, updateEmp  } = require('./dbcommands');
 
 inquirer
     .prompt([

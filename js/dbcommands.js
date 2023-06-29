@@ -14,29 +14,32 @@ const db = mysql.createConnection(
 );
 
 function viewAllDept() {
-    db.query(`SELECT departments FROM employees_db`, (err, results) => {
+    db.query(`SELECT * FROM department`, (err, results) => {
         if (err) {
-            console.log(err);
+            console.log('An error has occured, please contact the developer for help');
+        } else {
+            console.log(results);
         }
-        console.log(result);
     });
 }
 
 function viewAllRoles() {
-    db.query(`SELECT roles FROM employees_db`, (err, results) => {
+    db.query(`SELECT * FROM roles`, (err, results) => {
         if (err) {
-            console.log(err);
+            console.log('An error has occured, please contact the developer for help');
+        } else {
+            console.log(results);
         }
-        console.log(result);
     });
 }
 
 function viewAllEmp() {
-    db.query(`SELECT first_name, last_name FROM employees_db`, (err, results) => {
+    db.query(`SELECT * FROM employee`, (err, results) => {
         if (err) {
-            console.log(err);
+            console.log('An error has occured, please contact the developer for help');
+        } else {
+            console.log(results);
         }
-        console.log(result);
     });
 }
 
@@ -81,9 +84,8 @@ function addRole() {
         .then((response) => {
             db.query(`INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)`, [response.title, response.salary, response.dept_id], (err, results) => {
                 if (err) {
-                    console.log(err);
+                    console.log('An error has occured, please contact the developer for help');
                 }
-                console.table(results);
             });
         })
 }
@@ -118,21 +120,41 @@ function addEmp() {
             .then((response) => {
                 db.query(`INSERT INTO employee (first_name, last_name, role_id, department_id) VALUES (?, ?, ?, ?)`, response, (err, results) => {
                     if (err) {
-                        console.log(err);
+                        console.log('An error has occured, please contact the developer for help');
                     }
-                    console.table(results);
                 })
             })
     });
 }
 
 function updateEmp(id, firstname, lastname, role, manager) {
-    db.query(`UPDATE employee SET id = ? first_name = ? last_name = ? role_id = ? manager_id = ? WHERE id= ?`, id, firstname, lastname, role, manager, (err, results) => {
-        if (err) {
-            console.log(err);
-        }
-        console.log(result);
-    });
+    inquirer
+        .prompt([
+            {
+                type: 'list',
+                message: 'Which employee would you like to update information for?',
+                name: 'employee_select'
+            },
+            {
+                type: 'list',
+                message: 'Which of the following to you wish to update?',
+                name: 'update_select',
+                choices: ['First name', 'Last name', 'Role', 'Manager']
+            },
+            {
+                type: 'input',
+                message: 'What do you want to change this to?',
+                name: 'update',
+            }
+        ])
+        .then((response) => {
+            db.query(`UPDATE employee SET id = ? first_name = ? last_name = ? role_id = ? manager_id = ? WHERE id= ?`, id, firstname, lastname, role, manager, (err, results) => {
+                if (err) {
+                    console.log('An error has occured, please contact the developer for help');
+                }
+            });
+        })
+    
 }
 
-module.exports = { addDept, addRole, addEmp };
+module.exports = { addDept, addRole, addEmp, viewAllDept, viewAllRoles, viewAllEmp, updateEmp };
