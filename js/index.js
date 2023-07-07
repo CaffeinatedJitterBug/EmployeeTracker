@@ -20,16 +20,12 @@ function init() {
                 viewAllEmp();
             } else if (init === 'Add a department') {
                 addDept();
-                console.log('Working!');
             } else if (init === 'Add a role') {
                 addRole();
-                console.log('Working!');
             } else if (init === 'Add an employee') {
                 addEmp();
-                console.log('Working!');
             } else if (init === 'Update an employee role') {
                 updateEmp();
-                console.log('Working!');
             }
         })
 }

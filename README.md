@@ -1,5 +1,7 @@
 # EmployeeTracker
 
+[Video Tutorial](https://drive.google.com/file/d/1Sr-tUjWjljBcC5B5WIPfT4rUFGMo9MjC/view?usp=sharing)
+
 ## Description
 The Employee Tracker is a tool made for businesses that stores information on your employees. Departments, roles, how much each role makes, which departments those roles are in, as well as employee data can be stored in this database.
 
